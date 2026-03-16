@@ -1,171 +1,7 @@
 // ============================================
 // FIVE-BOX - Game Logic
 // ============================================
-
-// Word Lists (truncated for demo - would normally be much larger)
-const ANSWER_LIST = [
-  "about", "above", "acute", "admit", "adopt", "adult", "after", "again", "agent", "agree",
-  "alarm", "album", "alert", "alike", "alive", "allow", "alone", "along", "alter", "among",
-  "anger", "angle", "angry", "apart", "apple", "apply", "arena", "argue", "arise", "array",
-  "arrow", "aside", "asset", "avoid", "award", "aware", "badly", "baker", "bases", "basic",
-  "beach", "began", "begin", "being", "below", "bench", "birth", "black", "blade", "blame",
-  "blank", "bless", "blind", "block", "blood", "board", "boost", "booth", "bound", "brain",
-  "brand", "brave", "bread", "break", "breed", "brick", "brief", "bring", "broad", "broke",
-  "brown", "brush", "build", "built", "buyer", "cable", "carry", "catch", "cause", "chain",
-  "chair", "chaos", "charm", "chart", "chase", "cheap", "check", "chest", "chief", "child",
-  "china", "chose", "civil", "claim", "class", "clean", "clear", "clerk", "click", "cliff",
-  "climb", "clock", "close", "cloth", "cloud", "coach", "coast", "could", "count", "court",
-  "cover", "crack", "craft", "crash", "crazy", "cream", "crime", "cross", "crowd", "crown",
-  "crude", "curve", "cycle", "daily", "dance", "dealt", "death", "debut", "delay", "depth",
-  "dirty", "doubt", "dozen", "draft", "drain", "drama", "drank", "drawn", "dream", "dress",
-  "dried", "drink", "drive", "drove", "drunk", "early", "earth", "eight", "elite", "empty",
-  "enemy", "enjoy", "enter", "entry", "equal", "error", "essay", "event", "every", "exact",
-  "exist", "extra", "faith", "false", "fancy", "fatal", "fault", "favor", "fiber", "field",
-  "fifth", "fifty", "fight", "final", "first", "fixed", "flame", "flash", "fleet", "flesh",
-  "float", "floor", "flour", "fluid", "focus", "force", "forth", "forty", "forum", "found",
-  "frame", "frank", "fraud", "fresh", "front", "frost", "fruit", "fully", "funny", "ghost",
-  "giant", "given", "glass", "globe", "glory", "going", "grace", "grade", "grain", "grand",
-  "grant", "grape", "graph", "grasp", "grass", "grave", "great", "green", "greet", "gross",
-  "group", "grown", "guard", "guess", "guest", "guide", "guilt", "habit", "happy", "harsh",
-  "heart", "heavy", "hello", "hence", "horse", "hotel", "house", "human", "humor", "hurry",
-  "ideal", "image", "imply", "index", "inner", "input", "issue", "japan", "joint", "judge",
-  "known", "label", "large", "laser", "later", "laugh", "layer", "learn", "lease", "least",
-  "leave", "legal", "lemon", "level", "light", "limit", "liver", "local", "logic", "loose",
-  "lover", "lower", "loyal", "lucky", "lunch", "magic", "major", "maker", "march", "marry",
-  "match", "maybe", "mayor", "meant", "medal", "media", "melon", "mercy", "merit", "metal",
-  "meter", "might", "minor", "minus", "mixed", "model", "money", "month", "moral", "motor",
-  "mount", "mouse", "mouth", "moved", "movie", "music", "naked", "named", "nerve", "never",
-  "night", "ninth", "noble", "noise", "north", "noted", "novel", "nurse", "occur", "ocean",
-  "offer", "often", "olive", "orbit", "order", "organ", "other", "ought", "outer", "owned",
-  "owner", "paint", "panel", "panic", "paper", "party", "patch", "pause", "peace", "phase",
-  "phone", "photo", "piano", "piece", "pilot", "pitch", "pizza", "place", "plain", "plane",
-  "plant", "plate", "plaza", "point", "pound", "power", "press", "price", "pride", "prime",
-  "print", "prior", "prize", "probe", "prone", "proof", "proud", "prove", "queen", "query",
-  "quest", "quick", "quiet", "quite", "quota", "quote", "radio", "raise", "rally", "ranch",
-  "range", "rapid", "ratio", "reach", "react", "ready", "realm", "rebel", "refer", "reign",
-  "relax", "reply", "rider", "ridge", "rifle", "right", "rigid", "rival", "river", "roast",
-  "robot", "rocky", "roman", "rough", "round", "route", "royal", "rugby", "ruler", "rural",
-  "sadly", "safer", "saint", "salad", "sales", "sandy", "sauce", "scale", "scare", "scene",
-  "scope", "score", "scout", "screw", "seize", "sense", "serve", "setup", "seven", "shade",
-  "shake", "shall", "shame", "shape", "share", "shark", "sharp", "sheep", "sheer", "sheet",
-  "shelf", "shell", "shift", "shine", "shirt", "shock", "shoot", "shore", "short", "shout",
-  "shown", "sight", "silly", "since", "sixth", "sixty", "skill", "sleep", "slice", "slide",
-  "slope", "small", "smart", "smell", "smile", "smoke", "snake", "solar", "solid", "solve",
-  "sorry", "sound", "south", "space", "spare", "spark", "speak", "speed", "spell", "spend",
-  "spent", "spice", "spine", "spite", "split", "spoke", "spoon", "sport", "spray", "squad",
-  "stack", "staff", "stage", "stain", "stake", "stamp", "stand", "start", "state", "steak",
-  "steal", "steam", "steel", "steep", "steer", "stick", "still", "stock", "stone", "stood",
-  "store", "storm", "story", "stove", "strap", "straw", "strip", "stuck", "study", "stuff",
-  "style", "sugar", "suite", "sunny", "super", "surge", "swamp", "swear", "sweep", "sweet",
-  "swift", "swing", "sword", "table", "taken", "taste", "taxes", "teach", "tempo", "tenth",
-  "terms", "thank", "theft", "their", "theme", "there", "these", "thick", "thing", "think",
-  "third", "those", "three", "threw", "throw", "thumb", "tiger", "tight", "timer", "title",
-  "toast", "today", "token", "topic", "total", "touch", "tough", "tower", "toxic", "trace",
-  "track", "trade", "trail", "train", "trait", "trash", "treat", "trend", "trial", "tribe",
-  "trick", "tried", "tries", "troop", "truck", "truly", "trump", "trunk", "trust", "truth",
-  "tulip", "tumor", "twice", "twist", "uncle", "under", "undue", "union", "unity", "until",
-  "upper", "upset", "urban", "usage", "usual", "valid", "value", "vapor", "venue", "verse",
-  "video", "virus", "visit", "vital", "vivid", "vocal", "voice", "voter", "wagon", "waist",
-  "waste", "watch", "water", "waved", "weary", "weird", "whale", "wheat", "wheel", "where",
-  "which", "while", "white", "whole", "whose", "wider", "width", "woman", "women", "world",
-  "worry", "worse", "worst", "worth", "would", "wound", "wrath", "wrist", "write", "wrong",
-  "wrote", "yacht", "yield", "young", "youth", "zones"
-];
-
-// Valid guesses include answer list plus many more obscure 5-letter words
-const VALID_GUESSES = new Set([
-  ...ANSWER_LIST,
-  "aahed", "aalii", "abaca", "abaci", "aback", "abamp", "abase", "abash", "abate", "abaya",
-  "abide", "abode", "aboon", "abort", "abuse", "abuts", "abysm", "acerb", "ached", "aches",
-  "acids", "acing", "acned", "acnes", "acorn", "acres", "acrid", "acted", "actor", "addax",
-  "added", "adder", "addle", "adeem", "adios", "adman", "admen", "adobe", "adobo", "adore",
-  "adorn", "adult", "adzes", "aerie", "affix", "afire", "afoot", "afore", "afoul", "agers",
-  "aggie", "agile", "aging", "agios", "aglow", "agone", "agora", "agues", "ahead", "aider",
-  "aides", "ailed", "aimed", "aimer", "aioli", "aired", "airer", "aisle", "alamo", "alarm",
-  "alary", "album", "alder", "aleph", "algae", "algal", "alias", "alibi", "alien", "align",
-  "allay", "alley", "allot", "alloy", "aloes", "aloft", "aloha", "alpha", "altar", "alums",
-  "amass", "amaze", "amber", "ambit", "amble", "ambos", "ameba", "amend", "amice", "amigo",
-  "amine", "amino", "amiss", "amity", "ammos", "amnia", "amoks", "amole", "amort", "amour",
-  "ample", "amply", "amuck", "amuse", "ancho", "anear", "angel", "anglo", "angst", "anima",
-  "anime", "anion", "anise", "ankle", "annex", "annoy", "anode", "antic", "antis", "antsy",
-  "anvil", "aorta", "apace", "aphid", "apnea", "aport", "appel", "apres", "apron", "apsis",
-  "aptly", "aquae", "aquas", "arbor", "arced", "ardor", "areae", "areal", "areas", "areca",
-  "arepa", "argon", "argot", "arias", "arils", "armed", "armor", "aroid", "aroma", "arose",
-  "arras", "arris", "arson", "artsy", "arums", "asana", "ascot", "ashed", "ashen", "ashes",
-  "askew", "aspen", "asper", "aspic", "assay", "asses", "atilt", "atlas", "atoll", "atoms",
-  "atone", "atria", "attic", "audio", "audit", "auger", "aught", "augur", "aunts", "aunty",
-  "aurae", "aural", "auras", "auric", "autos", "auxin", "avail", "avant", "avast", "avert",
-  "avian", "avion", "aviso", "avows", "await", "awake", "awash", "awful", "awoke", "awols",
-  "axels", "axial", "axils", "axing", "axiom", "axion", "axles", "axons", "azide", "azine",
-  "azoic", "azole", "azote", "azoth", "azure", "babel", "babes", "babka", "backs", "bacon",
-  "badge", "bagel", "baggy", "bails", "bairn", "baits", "baked", "bakes", "balds", "baldy",
-  "baled", "baler", "bales", "balks", "balky", "balls", "balms", "balmy", "banal", "banco",
-  "bands", "bandy", "banes", "bangs", "banjo", "banks", "barbs", "bards", "bared", "barer",
-  "bares", "barge", "barks", "barky", "barns", "baron", "barre", "basal", "based", "baser",
-  "basil", "basin", "basis", "basks", "bassi", "basso", "bassy", "baste", "batch", "bated",
-  "bathe", "baths", "batik", "baton", "batts", "batty", "bauds", "bawds", "bawdy", "bawls",
-  "bayed", "bayou", "beads", "beady", "beaks", "beaky", "beams", "beamy", "beans", "beard",
-  "bears", "beast", "beats", "beaus", "beaut", "beaux", "bebop", "becks", "bedim", "beech",
-  "beefs", "beefy", "beeps", "beers", "beery", "beets", "befit", "befog", "begat", "beget",
-  "begot", "begun", "beige", "belay", "belch", "belie", "belle", "bells", "belly", "belts",
-  "bench", "bends", "bendy", "beret", "bergs", "berry", "berth", "beryl", "beset", "bests",
-  "betas", "bevel", "bezel", "bible", "bicep", "biddy", "bided", "bider", "bides", "bidet",
-  "biggy", "bight", "bigot", "bijou", "biked", "biker", "bikes", "bilbo", "biles", "bilge",
-  "bilks", "bills", "billy", "bimbo", "binds", "binge", "bingo", "biome", "biped", "birch",
-  "birds", "birth", "bison", "biter", "bites", "bitsy", "bitty", "blabs", "blade", "blahs",
-  "blare", "blase", "blast", "blaze", "bleak", "bleat", "bleed", "bleep", "blend", "blent",
-  "blest", "blimp", "blink", "blips", "bliss", "blitz", "bloat", "blobs", "blocs", "blogs",
-  "bloke", "blond", "blown", "blows", "blubs", "blued", "bluer", "blues", "bluff", "blunt",
-  "blurb", "blurs", "blurt", "blush", "boars", "boats", "bobby", "boded", "bodes", "bogey",
-  "bogie", "bogus", "boils", "bolas", "bolds", "boles", "bolls", "bolts", "bolus", "bombs",
-  "bonds", "boned", "boner", "bones", "bongo", "bongs", "bonks", "bonus", "boobs", "booby",
-  "booed", "books", "booms", "boons", "boors", "boots", "booty", "booze", "boozy", "borax",
-  "bored", "borer", "bores", "borne", "boron", "bosks", "bosky", "bosom", "bossy", "botch",
-  "bough", "boule", "bourg", "bourn", "bouts", "bowed", "bowel", "bower", "bowls", "boxed",
-  "boxer", "boxes", "boyar", "boyos", "bozos", "brace", "bract", "brads", "brags", "braid",
-  "brail", "brake", "brand", "brank", "brans", "brash", "brass", "brats", "brava", "bravo",
-  "brawl", "brawn", "brays", "braze", "bread", "break", "bream", "breed", "brews", "briar",
-  "bribe", "bricks", "bride", "brier", "bries", "brigs", "brims", "brine", "brink", "briny",
-  "brisk", "brits", "broil", "broke", "brood", "brook", "broom", "broth", "brown", "brows",
-  "brunt", "brute", "bubba", "bucks", "buddy", "budge", "buffs", "buggy", "bugle", "build",
-  "built", "bulbs", "bulge", "bulks", "bulky", "bulls", "bully", "bumps", "bumpy", "bunch",
-  "bunco", "bungs", "bunks", "bunny", "bunts", "buoys", "burbs", "buret", "burgh", "burgs",
-  "burls", "burly", "burns", "burnt", "burps", "burro", "burrs", "bursa", "burst", "busby",
-  "buses", "bushy", "busts", "busty", "butch", "butte", "butts", "buxom", "buyer", "buzzy",
-  "bylaw", "byres", "bytes", "byway", "cabal", "cabby", "caber", "cabin", "cable", "cacao",
-  "cache", "cacti", "caddy", "cades", "cadet", "cadge", "cadre", "cafes", "caged", "cager",
-  "cages", "cagey", "cairn", "cajon", "caked", "cakes", "calfs", "calif", "calks", "calla",
-  "calls", "calms", "calve", "calyx", "camel", "cameo", "cames", "campi", "campo", "camps",
-  "campy", "canal", "candy", "caned", "caner", "canes", "canid", "canna", "canny", "canoe",
-  "canon", "canst", "canto", "cants", "caped", "caper", "capes", "capon", "capos", "caput",
-  "carat", "carbs", "cards", "cared", "carer", "cares", "caret", "cargo", "carks", "carls",
-  "carol", "carom", "carps", "carry", "carse", "carte", "carts", "carve", "cased", "cases",
-  "casks", "caste", "casts", "catch", "cater", "caulk", "cauls", "cause", "caved", "caver",
-  "caves", "cavil", "cawed", "cease", "cecal", "cecum", "cedar", "ceded", "ceder", "cedes",
-  "ceiba", "ceils", "celeb", "cella", "cello", "cells", "celts", "cense", "cento", "cents",
-  "ceorl", "cered", "ceres", "ceria", "ceros", "cesta", "chads", "chafe", "chaff", "chain",
-  "chair", "chalk", "champ", "chams", "chang", "chant", "chaos", "chaps", "chard", "chare",
-  "charm", "chars", "chart", "chary", "chase", "chasm", "chats", "cheap", "cheat", "check",
-  "cheek", "cheep", "cheer", "chefs", "chert", "chess", "chest", "chews", "chewy", "chick",
-  "chide", "chief", "child", "chile", "chili", "chill", "chimb", "chime", "chimp", "china",
-  "chine", "chino", "chins", "chips", "chirp", "chits", "chive", "chock", "choir", "choke",
-  "chomp", "chops", "chord", "chore", "chose", "chows", "chubs", "chuck", "chugs", "chump",
-  "chums", "chunk", "churl", "churn", "chute", "cider", "cigar", "cilia", "cinch", "circa",
-  "cisco", "cited", "citer", "cites", "civet", "civic", "civil", "clack", "clade", "clads",
-  "clags", "claim", "clamp", "clams", "clang", "clank", "clans", "claps", "claro", "clary",
-  "clash", "clasp", "class", "clave", "claws", "clays", "clean", "clear", "cleat", "cleek",
-  "clefs", "cleft", "clerk", "clews", "click", "cliff", "climb", "clime", "cline", "cling",
-  "clink", "clips", "cloak", "clock", "clods", "clogs", "clomp", "clone", "clops", "close",
-  "cloth", "clots", "cloud", "clout", "clove", "clown", "cloys", "clubs", "cluck", "clued",
-  "clues", "clump", "clung", "clunk", "coach", "coact", "coals", "coaly", "coast", "coats",
-  "cobbs", "cobra", "cocas", "cocks", "cocky", "cocoa", "codas", "coded", "coder", "codes",
-  "codex", "codon", "coeds", "cogon", "cohos", "coifs", "coign", "coils", "coins", "coked",
-  "cokes", "colas", "colds", "coles", "colic", "colin", "colly", "colon", "color", "colts",
-  "comae", "comal", "comas", "combo", "combs", "comer", "comes", "comet", "comfy", "comic",
-  "comma", "compo", "comps", "comte", "conch", "condo", "coned", "cones", "coney", "conga",
-  "congo", "conic", "conks", "conns", "conte", "conus", "cooch", "cooed", "cooee", "cooer",
-  "cooey", "cooks", "cools", "cooly", "coons", "coops", "coopt", "coots", "copal", "copay"
-]);
+// Word lists are loaded from words.js (ANSWER_LIST and VALID_GUESSES)
 
 // Game State
 let gameState = {
@@ -187,8 +23,11 @@ let stats = {
   guessDistribution: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
 };
 
+// Hard Mode
+let hardMode = false;
+
 // DOM Elements
-let board, keyboard, statsModal, gameOverModal, toastContainer;
+let board, keyboard, statsModal, gameOverModal, toastContainer, helpModal;
 
 // Initialize game on page load
 document.addEventListener('DOMContentLoaded', init);
@@ -200,6 +39,12 @@ function init() {
   statsModal = document.getElementById('stats-modal');
   gameOverModal = document.getElementById('game-over-modal');
   toastContainer = document.getElementById('toast-container');
+  helpModal = document.getElementById('help-modal');
+  
+  // Load hard mode preference
+  hardMode = localStorage.getItem('five-box-hard-mode') === 'true';
+  const hardModeCheck = document.getElementById('hard-mode-check');
+  hardModeCheck.checked = hardMode;
   
   // Create game board
   createBoard();
@@ -351,6 +196,25 @@ function setupEventListeners() {
   // Share buttons
   document.getElementById('share-btn').addEventListener('click', shareResults);
   document.getElementById('share-result-btn').addEventListener('click', shareResults);
+  
+  // Help modal
+  document.getElementById('help-btn').addEventListener('click', () => {
+    helpModal.classList.remove('hidden');
+  });
+  document.getElementById('close-help').addEventListener('click', () => {
+    helpModal.classList.add('hidden');
+  });
+  
+  // Hard mode toggle
+  document.getElementById('hard-mode-check').addEventListener('change', (e) => {
+    if (e.target.checked && gameState.guesses.length > 0 && !gameState.gameOver) {
+      showToast('Hard Mode can only be enabled at the start of a round');
+      e.target.checked = false;
+      return;
+    }
+    hardMode = e.target.checked;
+    localStorage.setItem('five-box-hard-mode', hardMode);
+  });
 }
 
 function handleKeyPress(e) {
@@ -412,6 +276,16 @@ function submitGuess() {
     return;
   }
   
+  // Hard mode validation
+  if (hardMode && gameState.guesses.length > 0) {
+    const hardModeError = checkHardMode(gameState.currentGuess);
+    if (hardModeError) {
+      showToast(hardModeError);
+      shakeRow(gameState.currentRow);
+      return;
+    }
+  }
+  
   // Evaluate guess
   const evaluation = evaluateGuess(gameState.currentGuess);
   
@@ -443,7 +317,15 @@ function submitGuess() {
     gameState.won = true;
     updateStats(true, gameState.currentRow + 1);
     saveGameState();
-    setTimeout(() => showGameOver(true), 1500);
+    // Bounce animation after flip completes
+    setTimeout(() => {
+      const row = document.querySelectorAll(`[data-row="${gameState.currentRow}"]`);
+      const tiles = document.querySelectorAll(`.tile[data-row="${gameState.currentRow}"]`);
+      tiles.forEach((tile, i) => {
+        setTimeout(() => tile.classList.add('bounce'), i * 100);
+      });
+    }, 600);
+    setTimeout(() => showGameOver(true), 2000);
     return;
   }
   
@@ -589,6 +471,30 @@ function showGameOver(won) {
   }
   
   gameOverModal.classList.remove('hidden');
+}
+
+function checkHardMode(currentGuess) {
+  const lastGuess = gameState.guesses[gameState.guesses.length - 1];
+  const lastEval = evaluateGuess(lastGuess);
+  
+  // Check that all correct letters are in the same position
+  for (let i = 0; i < 5; i++) {
+    if (lastEval[i] === 'correct' && currentGuess[i] !== lastGuess[i]) {
+      const pos = ['1st','2nd','3rd','4th','5th'][i];
+      return `${pos} letter must be ${lastGuess[i]}`;
+    }
+  }
+  
+  // Check that all present letters are included somewhere
+  for (let i = 0; i < 5; i++) {
+    if (lastEval[i] === 'present') {
+      if (!currentGuess.includes(lastGuess[i])) {
+        return `Guess must contain ${lastGuess[i]}`;
+      }
+    }
+  }
+  
+  return null;
 }
 
 function shareResults() {

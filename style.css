@@ -41,14 +41,80 @@ header h1 {
   text-transform: uppercase;
 }
 
-#stats-btn {
+#help-btn {
+  position: absolute;
+  left: 16px;
+  background: none;
+  border: 2px solid var(--text-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-right {
   position: absolute;
   right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#stats-btn {
   background: none;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 8px;
+  padding: 4px;
+}
+
+.hard-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.hard-mode-toggle input[type="checkbox"] {
+  appearance: none;
+  width: 32px;
+  height: 18px;
+  background: #3a3a3c;
+  border-radius: 9px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.hard-mode-toggle input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.hard-mode-toggle input[type="checkbox"]:checked {
+  background: var(--correct);
+}
+
+.hard-mode-toggle input[type="checkbox"]:checked::after {
+  transform: translateX(14px);
 }
 
 main {
@@ -355,6 +421,87 @@ main {
 #game-over-message {
   margin: 12px 0;
   font-size: 1rem;
+}
+
+/* Win bounce animation */
+@keyframes bounce {
+  0%, 20% { transform: translateY(0); }
+  40% { transform: translateY(-30px); }
+  50% { transform: translateY(5px); }
+  60% { transform: translateY(-15px); }
+  80% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+.tile.bounce {
+  animation: bounce 1s ease;
+}
+
+/* Help Modal */
+.help-rules {
+  text-align: left;
+  margin: 12px 0;
+  padding-left: 20px;
+}
+
+.help-rules li {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.help-examples {
+  text-align: left;
+  margin: 16px 0;
+}
+
+.help-examples p {
+  font-size: 0.85rem;
+  margin: 8px 0;
+}
+
+.example-row {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.mini-tile {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--tile-empty-border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.mini-tile.correct {
+  background-color: var(--correct);
+  border-color: var(--correct);
+}
+
+.mini-tile.present {
+  background-color: var(--present);
+  border-color: var(--present);
+}
+
+.mini-tile.absent {
+  background-color: var(--absent);
+  border-color: var(--absent);
+}
+
+.help-note {
+  font-size: 0.85rem;
+  margin: 8px 0;
+  text-align: left;
+}
+
+.modal hr {
+  border: none;
+  border-top: 1px solid #3a3a3c;
+  margin: 16px 0;
 }
 
 /* Responsive */
