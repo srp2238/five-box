@@ -232,6 +232,34 @@ function setupEventListeners() {
     document.getElementById('theme-btn').textContent = isLight ? '☀️' : '🌙';
     localStorage.setItem('five-box-theme', isLight ? 'light' : 'dark');
   });
+  
+  // Reset button
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    if (!confirm('Reset today\'s game? This will clear your progress and let you replay the same word.')) {
+      return;
+    }
+    const today = getTodayDateString();
+    localStorage.removeItem(`five-box-state-${today}`);
+    // Close any open modals
+    statsModal.classList.add('hidden');
+    gameOverModal.classList.add('hidden');
+    // Reset game state
+    gameState = {
+      targetWord: getTodaysWord(),
+      guesses: [],
+      currentGuess: [],
+      currentRow: 0,
+      gameOver: false,
+      won: false,
+      letterStates: {}
+    };
+    // Rebuild board and reset keyboard
+    createBoard();
+    const keys = keyboard.querySelectorAll('button[data-key]');
+    keys.forEach(key => { key.removeAttribute('data-state'); });
+    saveGameState();
+    showToast('Game reset!');
+  });
 }
 
 function handleKeyPress(e) {

@@ -85,7 +85,8 @@ header h1 {
 }
 
 #stats-btn,
-#theme-btn {
+#theme-btn,
+#reset-btn {
   background: none;
   border: none;
   font-size: 1.5rem;
