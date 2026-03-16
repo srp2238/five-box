@@ -5,11 +5,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
+html {
   height: 100%;
+  overflow: hidden;
 }
 
 :root {
@@ -46,55 +44,65 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
-  height: 100vh;
+  height: 100%;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: fixed;
+  width: 100%;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-bottom: 1px solid var(--header-border);
-  position: relative;
   flex-shrink: 0;
+  gap: 4px;
+}
+
+.header-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 header h1 {
-  font-size: clamp(1.2rem, 5vw, 2rem);
+  font-size: clamp(1rem, 4vw, 1.6rem);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
 }
 
 #help-btn {
-  position: absolute;
-  left: 10px;
   background: none;
   border: 2px solid var(--text-color);
   color: var(--text-color);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   touch-action: manipulation;
+  flex-shrink: 0;
 }
 
 .header-right {
-  position: absolute;
-  right: 10px;
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: flex-end;
+  gap: 4px;
 }
 
 #stats-btn,
@@ -102,31 +110,37 @@ header h1 {
 #reset-btn {
   background: none;
   border: none;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  padding: 4px;
+  padding: 2px;
   touch-action: manipulation;
+  flex-shrink: 0;
 }
 
 .hard-mode-toggle {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   cursor: pointer;
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   text-transform: uppercase;
   font-weight: 700;
   color: var(--text-color);
   opacity: 0.7;
   touch-action: manipulation;
+  flex-shrink: 0;
+}
+
+.hard-mode-toggle .toggle-label {
+  display: none;
 }
 
 .hard-mode-toggle input[type="checkbox"] {
   appearance: none;
-  width: 28px;
-  height: 16px;
+  width: 26px;
+  height: 14px;
   background: var(--tile-border);
-  border-radius: 8px;
+  border-radius: 7px;
   position: relative;
   cursor: pointer;
   transition: background 0.2s;
@@ -137,8 +151,8 @@ header h1 {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   background: white;
   border-radius: 50%;
   transition: transform 0.2s;
@@ -564,25 +578,33 @@ main {
 /* Responsive - Tablets and small desktops */
 @media (min-width: 500px) {
   header {
-    padding: 14px 16px;
+    padding: 12px 16px;
+    gap: 8px;
   }
 
   #help-btn {
-    left: 16px;
     width: 32px;
     height: 32px;
     font-size: 1rem;
   }
 
+  header h1 {
+    font-size: 2rem;
+  }
+
   .header-right {
-    right: 16px;
-    gap: 12px;
+    gap: 10px;
+  }
+
+  .hard-mode-toggle .toggle-label {
+    display: inline;
   }
 
   #stats-btn,
   #theme-btn,
   #reset-btn {
     font-size: 1.5rem;
+    padding: 4px;
   }
 
   main {
@@ -593,11 +615,20 @@ main {
 /* Small phones (SE, older Androids) */
 @media (max-width: 374px) {
   header h1 {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   }
 
-  .hard-mode-toggle .toggle-label {
-    display: none;
+  #stats-btn,
+  #theme-btn,
+  #reset-btn {
+    font-size: 1rem;
+    padding: 1px;
+  }
+
+  #help-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 0.65rem;
   }
 
   #keyboard button {
