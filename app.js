@@ -41,6 +41,13 @@ function init() {
   toastContainer = document.getElementById('toast-container');
   helpModal = document.getElementById('help-modal');
   
+  // Load theme preference
+  const savedTheme = localStorage.getItem('five-box-theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    document.getElementById('theme-btn').textContent = '☀️';
+  }
+  
   // Load hard mode preference
   hardMode = localStorage.getItem('five-box-hard-mode') === 'true';
   const hardModeCheck = document.getElementById('hard-mode-check');
@@ -136,8 +143,11 @@ function restoreBoard() {
     });
   });
   
-  // Set current row
-  gameState.currentRow = gameState.guesses.length;
+  // currentRow is already correctly set from saved state
+  // Only set it if state was not previously saved (fallback)
+  if (gameState.currentRow === undefined || gameState.currentRow === null) {
+    gameState.currentRow = gameState.guesses.length;
+  }
 }
 
 function evaluateGuess(guess) {
@@ -214,6 +224,13 @@ function setupEventListeners() {
     }
     hardMode = e.target.checked;
     localStorage.setItem('five-box-hard-mode', hardMode);
+  });
+  
+  // Theme toggle
+  document.getElementById('theme-btn').addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light-mode');
+    document.getElementById('theme-btn').textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('five-box-theme', isLight ? 'light' : 'dark');
   });
 }
 
