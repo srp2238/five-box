@@ -233,16 +233,26 @@ function setupEventListeners() {
     localStorage.setItem('five-box-theme', isLight ? 'light' : 'dark');
   });
   
-  // Reset button
+  // Reset button - show confirmation modal
+  const resetModal = document.getElementById('reset-modal');
+  
   document.getElementById('reset-btn').addEventListener('click', () => {
-    if (!confirm('Reset today\'s game? This will clear your progress and let you replay the same word.')) {
-      return;
-    }
-    const today = getTodayDateString();
-    localStorage.removeItem(`five-box-state-${today}`);
-    // Close any open modals
+    // Close other modals first
     statsModal.classList.add('hidden');
     gameOverModal.classList.add('hidden');
+    helpModal.classList.add('hidden');
+    // Show reset confirmation
+    resetModal.classList.remove('hidden');
+  });
+  
+  document.getElementById('reset-cancel').addEventListener('click', () => {
+    resetModal.classList.add('hidden');
+  });
+  
+  document.getElementById('reset-confirm').addEventListener('click', () => {
+    resetModal.classList.add('hidden');
+    const today = getTodayDateString();
+    localStorage.removeItem(`five-box-state-${today}`);
     // Reset game state
     gameState = {
       targetWord: getTodaysWord(),
