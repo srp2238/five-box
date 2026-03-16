@@ -276,10 +276,7 @@ test('Hard mode fails when present letter is omitted', () => {
   );
   // E was present in CRANE (pos 4), E is in CREST at pos 2. 
   // CRUST has no E → should fail
-  // Wait, let me re-check: CRANE vs CREST
-  // C=correct, R=correct, A=absent, N=absent, E=present
-  // CRUST has no E → should fail
-  assert.ok(err !== null || true); // Re-evaluate below
+  assert.ok(err !== null, 'Should fail when present letter E is omitted from CRUST');
 });
 
 test('Hard mode allows present letter in different position', () => {
