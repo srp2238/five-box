@@ -2,6 +2,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 :root {
@@ -38,22 +46,26 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 header {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 16px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--header-border);
   position: relative;
+  flex-shrink: 0;
 }
 
 header h1 {
-  font-size: 2rem;
+  font-size: clamp(1.2rem, 5vw, 2rem);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -61,27 +73,28 @@ header h1 {
 
 #help-btn {
   position: absolute;
-  left: 16px;
+  left: 10px;
   background: none;
   border: 2px solid var(--text-color);
   color: var(--text-color);
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
 }
 
 .header-right {
   position: absolute;
-  right: 16px;
+  right: 10px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
 }
 
 #stats-btn,
@@ -89,9 +102,10 @@ header h1 {
 #reset-btn {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   cursor: pointer;
   padding: 4px;
+  touch-action: manipulation;
 }
 
 .hard-mode-toggle {
@@ -99,19 +113,20 @@ header h1 {
   align-items: center;
   gap: 4px;
   cursor: pointer;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   text-transform: uppercase;
   font-weight: 700;
   color: var(--text-color);
   opacity: 0.7;
+  touch-action: manipulation;
 }
 
 .hard-mode-toggle input[type="checkbox"] {
   appearance: none;
-  width: 32px;
-  height: 18px;
+  width: 28px;
+  height: 16px;
   background: var(--tile-border);
-  border-radius: 9px;
+  border-radius: 8px;
   position: relative;
   cursor: pointer;
   transition: background 0.2s;
@@ -122,8 +137,8 @@ header h1 {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   background: white;
   border-radius: 50%;
   transition: transform 0.2s;
@@ -134,7 +149,7 @@ header h1 {
 }
 
 .hard-mode-toggle input[type="checkbox"]:checked::after {
-  transform: translateX(14px);
+  transform: translateX(12px);
 }
 
 main {
@@ -143,10 +158,12 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: 8px 8px 10px;
   max-width: 500px;
   margin: 0 auto;
   width: 100%;
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* Toast */
@@ -181,26 +198,31 @@ main {
 #game-board {
   display: grid;
   grid-template-rows: repeat(6, 1fr);
-  gap: 5px;
-  padding: 10px;
-  flex-grow: 1;
-  max-height: 420px;
+  gap: clamp(3px, 0.6vw, 5px);
+  padding: 4px 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 350px;
+  align-content: center;
 }
 
 .row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 5px;
+  gap: clamp(3px, 0.6vw, 5px);
+  justify-items: center;
 }
 
 .tile {
-  width: 62px;
-  height: 62px;
+  width: 100%;
+  max-width: 62px;
+  aspect-ratio: 1 / 1;
   border: 2px solid var(--tile-empty-border);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2rem;
+  font-size: clamp(1.3rem, 5vw, 2rem);
   font-weight: 700;
   text-transform: uppercase;
   user-select: none;
@@ -257,15 +279,18 @@ main {
 #keyboard {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   max-width: 500px;
+  flex-shrink: 0;
+  padding: 0 2px;
 }
 
 .keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 6px;
+  gap: clamp(3px, 1vw, 6px);
+  width: 100%;
 }
 
 #keyboard button {
@@ -274,9 +299,10 @@ main {
   border: none;
   border-radius: 4px;
   padding: 0;
-  height: 58px;
-  min-width: 43px;
-  font-size: 0.85rem;
+  height: clamp(46px, 7vh, 58px);
+  flex: 1;
+  max-width: 43px;
+  font-size: clamp(0.7rem, 2.5vw, 0.85rem);
   font-weight: 700;
   cursor: pointer;
   text-transform: uppercase;
@@ -284,15 +310,22 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 #keyboard button.wide {
-  min-width: 65px;
-  font-size: 0.75rem;
+  flex: 1.5;
+  max-width: 65px;
+  font-size: clamp(0.6rem, 2vw, 0.75rem);
 }
 
 #keyboard button:hover {
   opacity: 0.9;
+}
+
+#keyboard button:active {
+  opacity: 0.8;
+  transform: scale(0.95);
 }
 
 #keyboard button[data-state="correct"] {
@@ -329,9 +362,13 @@ main {
   background: var(--modal-bg);
   border: 1px solid var(--modal-border);
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px 16px;
   max-width: 400px;
-  width: 90%;
+  width: 92%;
+  max-height: 85vh;
+  max-height: 85dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   position: relative;
   text-align: center;
 }
@@ -524,22 +561,117 @@ main {
   margin: 16px 0;
 }
 
-/* Responsive */
-@media (max-width: 400px) {
-  .tile {
-    width: 52px;
-    height: 52px;
-    font-size: 1.6rem;
+/* Responsive - Tablets and small desktops */
+@media (min-width: 500px) {
+  header {
+    padding: 14px 16px;
+  }
+
+  #help-btn {
+    left: 16px;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .header-right {
+    right: 16px;
+    gap: 12px;
+  }
+
+  #stats-btn,
+  #theme-btn,
+  #reset-btn {
+    font-size: 1.5rem;
+  }
+
+  main {
+    padding: 20px;
+  }
+}
+
+/* Small phones (SE, older Androids) */
+@media (max-width: 374px) {
+  header h1 {
+    font-size: 1.1rem;
+  }
+
+  .hard-mode-toggle .toggle-label {
+    display: none;
   }
 
   #keyboard button {
-    height: 50px;
-    min-width: 32px;
-    font-size: 0.75rem;
+    height: 42px;
+    border-radius: 3px;
   }
 
   #keyboard button.wide {
-    min-width: 50px;
-    font-size: 0.65rem;
+    font-size: 0.55rem;
+  }
+
+  .modal-content {
+    padding: 16px 12px;
+  }
+}
+
+/* Short viewport (landscape or short phones) */
+@media (max-height: 600px) {
+  header {
+    padding: 6px 10px;
+  }
+
+  header h1 {
+    font-size: 1rem;
+  }
+
+  main {
+    padding: 4px 8px 6px;
+  }
+
+  #game-board {
+    gap: 2px;
+    padding: 2px 0;
+  }
+
+  .row {
+    gap: 2px;
+  }
+
+  .tile {
+    font-size: 1.1rem;
+  }
+
+  #keyboard {
+    gap: 4px;
+  }
+
+  #keyboard button {
+    height: 36px;
+  }
+
+  .modal-content {
+    max-height: 90vh;
+    max-height: 90dvh;
+  }
+}
+
+/* Very short viewport (landscape on phone) */
+@media (max-height: 480px) {
+  header {
+    padding: 4px 10px;
+    border-bottom: none;
+  }
+
+  header h1 {
+    font-size: 0.9rem;
+  }
+
+  main {
+    padding: 2px 6px 4px;
+  }
+
+  #keyboard button {
+    height: 30px;
+    border-radius: 3px;
   }
 }

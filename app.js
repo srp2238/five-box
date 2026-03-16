@@ -64,6 +64,23 @@ function init() {
   
   // Set up event listeners
   setupEventListeners();
+  
+  // Mobile: prevent iOS rubber-band scrolling
+  document.addEventListener('touchmove', (e) => {
+    if (!e.target.closest('.modal-content')) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+  
+  // Mobile: handle visual viewport resize (address bar show/hide)
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      document.documentElement.style.setProperty('--vh', `${window.visualViewport.height * 0.01}px`);
+      document.body.style.height = `${window.visualViewport.height}px`;
+    });
+    // Set initial value
+    document.documentElement.style.setProperty('--vh', `${window.visualViewport.height * 0.01}px`);
+  }
 }
 
 function createBoard() {
