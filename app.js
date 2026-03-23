@@ -143,8 +143,18 @@ function getTodaysWord() {
   const startDate = new Date('2025-01-01');
   const today = new Date();
   const daysSinceStart = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-  const wordIndex = Math.abs(daysSinceStart) % ANSWER_LIST.length;
+  const wordIndex = seededIndex(Math.abs(daysSinceStart), ANSWER_LIST.length);
   return ANSWER_LIST[wordIndex].toUpperCase();
+}
+
+// Deterministic pseudo-random index from a day number.
+// Uses a simple integer hash so the word sequence isn't alphabetical.
+function seededIndex(day, listLength) {
+  let h = day;
+  h = ((h >> 16) ^ h) * 0x45d9f3b;
+  h = ((h >> 16) ^ h) * 0x45d9f3b;
+  h = (h >> 16) ^ h;
+  return Math.abs(h) % listLength;
 }
 
 function restoreBoard() {

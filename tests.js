@@ -72,11 +72,20 @@ function checkHardMode(currentGuess, lastGuess, targetWord) {
   return null;
 }
 
+// Deterministic pseudo-random index (mirrors app.js seededIndex)
+function seededIndex(day, listLength) {
+  let h = day;
+  h = ((h >> 16) ^ h) * 0x45d9f3b;
+  h = ((h >> 16) ^ h) * 0x45d9f3b;
+  h = (h >> 16) ^ h;
+  return Math.abs(h) % listLength;
+}
+
 // Daily word selection (pure logic from app.js)
 function getTodaysWord(date) {
   const startDate = new Date('2025-01-01');
   const daysSinceStart = Math.floor((date - startDate) / (1000 * 60 * 60 * 24));
-  const wordIndex = Math.abs(daysSinceStart) % ANSWER_LIST.length;
+  const wordIndex = seededIndex(Math.abs(daysSinceStart), ANSWER_LIST.length);
   return ANSWER_LIST[wordIndex].toUpperCase();
 }
 
@@ -236,9 +245,23 @@ test('Word index wraps around ANSWER_LIST', () => {
   assert.ok(ANSWER_LIST.includes(word.toLowerCase()), `"${word}" should be in ANSWER_LIST`);
 });
 
-test('Start date (2025-01-01) returns first word', () => {
+test('Start date (2025-01-01) returns a valid word (seeded, not first)', () => {
   const word = getTodaysWord(new Date('2025-01-01'));
-  assert.strictEqual(word, ANSWER_LIST[0].toUpperCase());
+  assert.ok(ANSWER_LIST.includes(word.toLowerCase()), `"${word}" should be in ANSWER_LIST`);
+  // Day 0 hashes to a pseudo-random index, so it won't be the first word
+});
+
+test('Word sequence is not alphabetical (pseudo-random)', () => {
+  const words = [];
+  for (let i = 0; i < 10; i++) {
+    const d = new Date('2025-01-01');
+    d.setDate(d.getDate() + i);
+    words.push(getTodaysWord(d));
+  }
+  // Check that the 10 consecutive words are NOT sorted alphabetically
+  const sorted = [...words].sort();
+  const isSorted = words.every((w, i) => w === sorted[i]);
+  assert.ok(!isSorted, 'Consecutive daily words should not be in alphabetical order');
 });
 
 // ============================================
