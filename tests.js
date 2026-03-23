@@ -74,11 +74,13 @@ function checkHardMode(currentGuess, lastGuess, targetWord) {
 
 // Deterministic pseudo-random index (mirrors app.js seededIndex)
 function seededIndex(day, listLength) {
-  let h = day;
-  h = ((h >> 16) ^ h) * 0x45d9f3b;
-  h = ((h >> 16) ^ h) * 0x45d9f3b;
+  let h = day | 0;
+  h = ((h >> 16) ^ h);
+  h = Math.imul(h, 0x45d9f3b);
+  h = ((h >> 16) ^ h);
+  h = Math.imul(h, 0x45d9f3b);
   h = (h >> 16) ^ h;
-  return Math.abs(h) % listLength;
+  return (h >>> 0) % listLength;
 }
 
 // Daily word selection (pure logic from app.js)

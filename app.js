@@ -150,11 +150,13 @@ function getTodaysWord() {
 // Deterministic pseudo-random index from a day number.
 // Uses a simple integer hash so the word sequence isn't alphabetical.
 function seededIndex(day, listLength) {
-  let h = day;
-  h = ((h >> 16) ^ h) * 0x45d9f3b;
-  h = ((h >> 16) ^ h) * 0x45d9f3b;
+  let h = day | 0;
+  h = ((h >> 16) ^ h);
+  h = Math.imul(h, 0x45d9f3b);
+  h = ((h >> 16) ^ h);
+  h = Math.imul(h, 0x45d9f3b);
   h = (h >> 16) ^ h;
-  return Math.abs(h) % listLength;
+  return (h >>> 0) % listLength;
 }
 
 function restoreBoard() {
@@ -302,6 +304,10 @@ function setupEventListeners() {
 function handleKeyPress(e) {
   if (gameState.gameOver) return;
   
+  // Don't process input when a modal is open
+  const anyModalOpen = document.querySelector('.modal:not(.hidden)');
+  if (anyModalOpen) return;
+  
   if (e.key === 'Enter') {
     handleInput('ENTER');
   } else if (e.key === 'Backspace' || e.key === 'Delete') {
@@ -401,7 +407,6 @@ function submitGuess() {
     saveGameState();
     // Bounce animation after flip completes
     setTimeout(() => {
-      const row = document.querySelectorAll(`[data-row="${gameState.currentRow}"]`);
       const tiles = document.querySelectorAll(`.tile[data-row="${gameState.currentRow}"]`);
       tiles.forEach((tile, i) => {
         setTimeout(() => tile.classList.add('bounce'), i * 100);
@@ -428,7 +433,7 @@ function submitGuess() {
 }
 
 function revealTiles(evaluation) {
-  const row = document.querySelector(`[data-row="${gameState.currentRow}"]`);
+  const row = document.querySelector(`.row[data-row="${gameState.currentRow}"]`);
   const tiles = row.querySelectorAll('.tile');
   
   tiles.forEach((tile, i) => {
@@ -598,5 +603,7 @@ function shareResults() {
   
   navigator.clipboard.writeText(text).then(() => {
     showToast('Results copied to clipboard!');
+  }).catch(() => {
+    showToast('Could not copy to clipboard');
   });
 }
