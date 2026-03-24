@@ -74,19 +74,17 @@ function checkHardMode(currentGuess, lastGuess, targetWord) {
 
 // Deterministic pseudo-random index (mirrors app.js seededIndex)
 function seededIndex(day, listLength) {
-  let h = day | 0;
-  h = ((h >> 16) ^ h);
-  h = Math.imul(h, 0x45d9f3b);
-  h = ((h >> 16) ^ h);
-  h = Math.imul(h, 0x45d9f3b);
-  h = (h >> 16) ^ h;
-  return (h >>> 0) % listLength;
+  let h = day ^ 0x9e3779b9;
+  h = Math.imul(h ^ (h >>> 16), 0x85ebca6b);
+  h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+  return ((h ^ (h >>> 16)) >>> 0) % listLength;
 }
 
 // Daily word selection (pure logic from app.js)
 function getTodaysWord(date) {
-  const startDate = new Date('2025-01-01');
-  const daysSinceStart = Math.floor((date - startDate) / (1000 * 60 * 60 * 24));
+  const startDate = new Date('2025-01-01T00:00:00Z');
+  const utcDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const daysSinceStart = Math.floor((utcDate - startDate) / (1000 * 60 * 60 * 24));
   const wordIndex = seededIndex(Math.abs(daysSinceStart), ANSWER_LIST.length);
   return ANSWER_LIST[wordIndex].toUpperCase();
 }

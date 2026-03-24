@@ -140,23 +140,21 @@ function getTodayDateString() {
 }
 
 function getTodaysWord() {
-  const startDate = new Date('2025-01-01');
+  const startDate = new Date('2025-01-01T00:00:00Z');
   const today = new Date();
-  const daysSinceStart = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+  const utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const daysSinceStart = Math.floor((utcToday - startDate) / (1000 * 60 * 60 * 24));
   const wordIndex = seededIndex(Math.abs(daysSinceStart), ANSWER_LIST.length);
   return ANSWER_LIST[wordIndex].toUpperCase();
 }
 
 // Deterministic pseudo-random index from a day number.
-// Uses a simple integer hash so the word sequence isn't alphabetical.
+// Uses a strong integer hash so the word sequence isn't alphabetical.
 function seededIndex(day, listLength) {
-  let h = day | 0;
-  h = ((h >> 16) ^ h);
-  h = Math.imul(h, 0x45d9f3b);
-  h = ((h >> 16) ^ h);
-  h = Math.imul(h, 0x45d9f3b);
-  h = (h >> 16) ^ h;
-  return (h >>> 0) % listLength;
+  let h = day ^ 0x9e3779b9;
+  h = Math.imul(h ^ (h >>> 16), 0x85ebca6b);
+  h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+  return ((h ^ (h >>> 16)) >>> 0) % listLength;
 }
 
 function restoreBoard() {
