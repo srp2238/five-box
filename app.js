@@ -105,7 +105,7 @@ function createBoard() {
 
 function initializeGame() {
   const today = getTodayDateString();
-  const savedState = localStorage.getItem(`five-box-state-${today}`);
+  const savedState = localStorage.getItem(`five-box-v2-${today}`);
   
   if (savedState) {
     // Load existing game
@@ -132,18 +132,22 @@ function initializeGame() {
 }
 
 function getTodayDateString() {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
+  // Use MST (UTC-7) so the date rolls over at midnight Mountain Standard Time
+  const now = new Date();
+  const mst = new Date(now.getTime() - 7 * 60 * 60 * 1000);
+  const year = mst.getUTCFullYear();
+  const month = String(mst.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(mst.getUTCDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
 
 function getTodaysWord() {
-  const startDate = new Date('2025-01-01T00:00:00Z');
-  const today = new Date();
-  const utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
-  const daysSinceStart = Math.floor((utcToday - startDate) / (1000 * 60 * 60 * 24));
+  // Use MST (UTC-7) so every player gets the same word, refreshing at midnight MST
+  const startDate = new Date('2026-03-26T00:00:00Z');
+  const now = new Date();
+  const mst = new Date(now.getTime() - 7 * 60 * 60 * 1000);
+  const mstToday = new Date(Date.UTC(mst.getUTCFullYear(), mst.getUTCMonth(), mst.getUTCDate()));
+  const daysSinceStart = Math.floor((mstToday - startDate) / (1000 * 60 * 60 * 24));
   const wordIndex = seededIndex(Math.abs(daysSinceStart), ANSWER_LIST.length);
   return ANSWER_LIST[wordIndex].toUpperCase();
 }
@@ -279,7 +283,7 @@ function setupEventListeners() {
   document.getElementById('reset-confirm').addEventListener('click', () => {
     resetModal.classList.add('hidden');
     const today = getTodayDateString();
-    localStorage.removeItem(`five-box-state-${today}`);
+    localStorage.removeItem(`five-box-v2-${today}`);
     // Reset game state
     gameState = {
       targetWord: getTodaysWord(),
@@ -473,7 +477,7 @@ function updateKeyboard() {
 
 function saveGameState() {
   const today = getTodayDateString();
-  localStorage.setItem(`five-box-state-${today}`, JSON.stringify(gameState));
+  localStorage.setItem(`five-box-v2-${today}`, JSON.stringify(gameState));
 }
 
 function loadStats() {

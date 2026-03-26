@@ -80,11 +80,12 @@ function seededIndex(day, listLength) {
   return ((h ^ (h >>> 16)) >>> 0) % listLength;
 }
 
-// Daily word selection (pure logic from app.js)
+// Daily word selection (pure logic from app.js) — uses MST (UTC-7)
 function getTodaysWord(date) {
-  const startDate = new Date('2025-01-01T00:00:00Z');
-  const utcDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-  const daysSinceStart = Math.floor((utcDate - startDate) / (1000 * 60 * 60 * 24));
+  const startDate = new Date('2026-03-26T00:00:00Z');
+  const mst = new Date(date.getTime() - 7 * 60 * 60 * 1000);
+  const mstDate = new Date(Date.UTC(mst.getUTCFullYear(), mst.getUTCMonth(), mst.getUTCDate()));
+  const daysSinceStart = Math.floor((mstDate - startDate) / (1000 * 60 * 60 * 24));
   const wordIndex = seededIndex(Math.abs(daysSinceStart), ANSWER_LIST.length);
   return ANSWER_LIST[wordIndex].toUpperCase();
 }
