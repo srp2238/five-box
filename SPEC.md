@@ -58,7 +58,7 @@ five-box/
 
 ### Daily Word Selection (`getTodaysWord`)
 
-- **Epoch:** January 1, 2025
+- **Epoch:** March 26, 2026
 - **Algorithm:** `seededIndex(daysSinceEpoch, ANSWER_LIST.length)` — a deterministic integer hash maps the day number to a pseudo-random index so the word sequence is not alphabetical.
 - Deterministic — same date always yields the same word.
 
@@ -83,7 +83,7 @@ All state is persisted in **`localStorage`**:
 
 | Key                              | Description                              |
 |----------------------------------|------------------------------------------|
-| `five-box-state-{YYYY-MM-DD}`   | Current game state (JSON): `targetWord`, `guesses`, `currentGuess`, `currentRow`, `gameOver`, `won`, `letterStates` |
+| `five-box-v2-{YYYY-MM-DD}`      | Current game state (JSON): `targetWord`, `guesses`, `currentGuess`, `currentRow`, `gameOver`, `won`, `letterStates` |
 | `five-box-stats`                 | Cumulative stats (JSON): `gamesPlayed`, `wins`, `currentStreak`, `maxStreak`, `guessDistribution` |
 | `five-box-theme`                 | `"light"` or absent (dark default)       |
 | `five-box-hard-mode`             | `"true"` or `"false"`                    |
